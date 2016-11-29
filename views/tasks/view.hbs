@@ -1,0 +1,35 @@
+<div class="row">
+    <h1>All tasks</h1>
+
+    <form method="post" action="/tasks/search" class="form-inline pull-right">
+      <div class="form-group">
+        <div class="input-group">
+          <input type="text" name="name" class="form-control" id="exampleInputAmount" placeholder="Search" required>
+        </div>
+      </div>
+      <button type="submit" class="btn btn-primary">Search</button>
+    </form>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Task Name</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{# each tasks }}
+                <tr>
+                    <td>{{this.name}}</td>
+                    <td>
+                        <span><a href="/tasks/edit/{{this._id}}">Edit</a></span> |
+                        <span><a href="/tasks/delete/{{this._id}}">Delete</a></span>
+                    </td>
+                </tr>
+            {{/each}}
+        </tbody>
+    </table>
+
+    
+
+</div>

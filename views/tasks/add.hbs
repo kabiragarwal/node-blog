@@ -1,0 +1,29 @@
+<div>
+    <h1>Add New Task</h1>
+    <hr>
+    {{#if errors}}
+        <div class="alert alert-danger">
+            <ul>
+                {{#each errors }}
+                    <li style="list-style-type:none">{{this.msg}}</li>
+                {{/each }}
+            </ul>
+        </div>
+    {{/if}}
+    {{#if success}}
+        <div class="alert alert-success">
+            {{ success }}
+        </div>
+    {{/if}}
+
+
+    <form  action="/tasks/add" method="post">
+        <div class="form-group">
+            <label for="name">Task Name: </label>
+            <input class="form-control" type="text" name="name" id="name" value="">
+        </div>
+        <button type="submit" class="btn btn-default">Submit</button>
+    </form>
+
+
+</div>

@@ -1,0 +1,28 @@
+<div>
+    <h1>Edit Task</h1>
+    <hr>
+    {{#if errors}}
+        <div class="alert alert-danger">
+            <ul>
+                {{#each errors }}
+                    <li style="list-style-type:none">{{this.msg}}</li>
+                {{/each }}
+            </ul>
+        </div>
+    {{/if}}
+    {{#if success}}
+        <div class="alert alert-success">
+            {{ success }}
+        </div>
+    {{/if}}
+
+    <form  action="/tasks/update" method="post">
+        <input type="hidden" name="id" id="id" value="{{this.task._id}}">
+        <div class="form-group">
+            <label for="name">Task Name: </label>
+            <input class="form-control" type="text" name="name" id="name" value="{{this.task.name}}">
+        </div>
+        <button type="submit" class="btn btn-default">Submit</button>
+    </form>
+
+</div>
