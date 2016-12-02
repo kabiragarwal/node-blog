@@ -17,10 +17,14 @@
     {{/if}}
 
 
-    <form  action="/tasks/add" method="post">
+    <form  ref='uploadForm' id='uploadForm' action="/tasks/add" method="post" encType="multipart/form-data">
         <div class="form-group">
             <label for="name">Task Name: </label>
             <input class="form-control" type="text" name="name" id="name" value="">
+        </div>
+        <div class="form-group">
+            <label for="name">upload Image: </label>
+            <input class="form-control" type="file" name="sampleFile" id="name" value="">
         </div>
         <button type="submit" class="btn btn-default">Submit</button>
     </form>

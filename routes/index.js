@@ -22,31 +22,55 @@ router.post('/tasks/add', function(req, res, next){
         task = new Task({
             name: req.body.name
         });
-        task.save(function(err, result){
-            if(err){
+
+        var sampleFile;
+
+        if (!req.files) {
+            res.send('No files were uploaded.');
+            return;
+        }
+
+        sampleFile = req.files.sampleFile;
+        sampleFile.mv('public/images/filename.jpg', function(err) {
+            if (err) {
                 console.log(err);
-                return res.redirect('/tasks/add');
+                res.status(500).send(err);
             }
-            console.log('data saved');
-            res.render('tasks/add', {success: 'Task added successfully'});
+            else {
+                console.log('File uploaded!');
+                res.render('tasks/add', {success: 'Task added successfully'});
+            }
         });
+
+        // task.save(function(err, result){
+        //     if(err){
+        //         console.log(err);
+        //         return res.redirect('/tasks/add');
+        //     }
+        //     console.log('data saved');
+        //     res.render('tasks/add', {success: 'Task added successfully'});
+        // });
     }
 });
 
 router.get('/tasks/view', function(req, res, next){
-    var perPage = 3, page = req.param('page') > 0 ? req.param('page') : 0;
+    var perPage = 100, page = req.param('page') > 0 ? req.param('page') : 0;
 
     //Task.find(function(err, docs){
-    Task.paginate({}, { page: 1, limit: 3 }, function(err, result) {
+    Task.paginate({}, { page: 1, limit: perPage }, function(err, result) {
         if(err){
             console.log(err);
         }
         console.log(result);
-         var taskData = [];
+         var taskData = []; pagingEnabled =false; paging = [];
         for(i = 0; i < result.docs.length; i++){
           taskData.push(result.docs[i]);
         }
-        res.render('tasks/view', { tasks: taskData, result: result });
+        for(i = 1; i <= result.pages; i++){
+            pagingEnabled = true;
+          paging.push('<li class="active"><a href="/?page=i">{{i}}</a></li>');
+        }
+        res.render('tasks/view', { tasks: taskData, result: result, pagingData: paging, pagingStatus : pagingEnabled });
     });
 });
 
