@@ -4,7 +4,8 @@ var Schema = mongoose.Schema;
 
 
 var taskSchema = new Schema({
-    name: {type: String, required: true}
+    name: {type: String, required: true},
+    image: {type: String, required: true, default: 'default.jpg'}
 });
 
 taskSchema.plugin(mongoosePaginate);

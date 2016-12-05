@@ -12,8 +12,6 @@ var session = require('express-session');
 var passport = require('passport');
 var flash = require('connect-flash');
 var MongoStore = require('connect-mongo')(session);
-var fileUpload = require('express-fileupload');
-
 
 var routes = require('./routes/index');
 var userRoutes = require('./routes/user');
@@ -22,9 +20,29 @@ var userRoutes = require('./routes/user');
 var app = express();
 mongoose.connect('localhost:27017/node-todo');
 require('./config/passport');
+mongoose.Promise = require('bluebird');
+
+
+
+// app.engine('.hbs', expressHbs( { defaultLayout: 'layout', extname:'.hbs',
+//     helpers : {
+//         if_equal : function(a, b, opts) {
+//                 if (a == b) {
+//                     return opts.fn(this)
+//                 } else {
+//                     return opts.inverse(this)
+//                 }
+//         }
+//     }
+// })
+// );
+
+
+// app.engine('handlebars', hbs.engine);
+// app.set('view engine', 'handlebars');
 
 // view engine setup
-//app.set('views', path.join(__dirname, 'views'));
+app.set('views', path.join(__dirname, 'views'));
 app.engine('.hbs', expressHbs({defaultLayout: 'layout', extname:'.hbs'}));
 app.set('view engine', '.hbs');
 
@@ -46,17 +64,14 @@ app.use(flash());
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(fileUpload());
 
 app.use(function(req, res, next){
     res.locals.login = req.isAuthenticated();
     next();
 });
 
-
 app.use('/user', userRoutes);
 app.use('/', routes);
-
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

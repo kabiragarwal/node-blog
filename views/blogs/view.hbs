@@ -1,0 +1,38 @@
+<div class="row">
+    <h1>All Posts</h1>
+
+    <div class="pull-left">
+        <a href="/blogs/create">Create New Post</a>
+    </div>
+
+    <div class="col-md-4 col-sm-6 col-md-offset-4 col-sm-offset-3">
+        <div id="success" class="success alert alert-success" {{#if noMessage}}hidden{{/if}}>
+            {{ successMsg }}
+        </div>
+    </div>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Post Name</th>
+                <th>Post Category</th>
+                <th>Post Image</th>
+                <th>Post Content</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#each posts }}
+                <tr>
+                    <td>{{this.name}}</td>
+                    <td>{{this.category.description}}</td>
+                    <td><img src="/files/{{this.image}}" style="max-width:150px"></td>
+                    <td>{{this.content}}</td>
+                    <td>
+                        <span><a href="/blogs/update/{{this._id}}">Edit</a></span> |
+                        <span><a href="/blogs/delete/{{this._id}}">Delete</a></span>
+                    </td>
+                </tr>
+            {{/each}}
+        </tbody>
+    </table>
+</div>

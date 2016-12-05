@@ -16,11 +16,20 @@
         </div>
     {{/if}}
 
-    <form  action="/tasks/update" method="post">
+    <form  action="/tasks/update" method="post" encType="multipart/form-data">
         <input type="hidden" name="id" id="id" value="{{this.task._id}}">
+        <input type="hidden" name="old_image" id="id" value="{{this.task.image}}">
         <div class="form-group">
             <label for="name">Task Name: </label>
             <input class="form-control" type="text" name="name" id="name" value="{{this.task.name}}">
+        </div>
+        <div class="form-group">
+            <label for="name">Upload Image: </label>
+            <input class="form-control" type="file" name="image" id="name" value="" required>
+        </div>
+        <div class="form-group">
+            <label for="name">Old Image: </label>
+            <img src="/files/{{this.task.image}}">
         </div>
         <button type="submit" class="btn btn-default">Submit</button>
     </form>
