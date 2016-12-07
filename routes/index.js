@@ -135,6 +135,18 @@ function deleteFile (file) {
     });
 }
 
+function pagingFunc(results) {
+    pagingLink = [];
+    var activeClass = links = j = '' ;
+    for(i=1; i<=results.pages; i++){
+        links = '';
+        activeClass = (results.page == i)?'class="active"': '';
+        links = '<li ' + activeClass + '><a href="?page='+ i +'">';
+        pagingLink.push(links + i+ "</a></li>")
+    }
+    return pagingLink;
+}
+
 router.get('/tasks/delete/:id', function(req, res, next){
     console.log('delete');
     var taskId = req.params.id;
@@ -211,22 +223,47 @@ router.post('/blogs/create', upload.single('image'), function(req, res, next){
     }
 });
 
+function testFunc(){
+        console.log('hello');
+}
+
 router.get('/blogs/view', function(req, res, next){
-
+    var perPage = 3, page = req.param('page') > 0 ? req.param('page') : 1;
+    console.log('page=' + page);
     var successMsg = req.flash('success')[0];
-    Post.find()
-        .populate('category')
-        .exec(function(err, results) {
-            if (err) console.log(err);
-        res.render('blogs/view', { posts: results, successMsg:successMsg, noMessage: !successMsg });
-    });
+    //Post.find().populate('category').exec(function(err, results) {
+    Post.paginate({}, { page: page, limit: perPage }, function(err, results) {
+        if (err) console.log(err);
 
-    // Post.find({}, function(err, result) {
-    //     if(err){
-    //         console.log(err);
-    //     }
-    //     res.render('blogs/view', { posts: result });
+        if(results.docs.length>1){
+            pagingLink = pagingFunc(results);
+        }else {
+            pagingLink = [];
+        }
+
+        res.render('blogs/view', { posts: results.docs, paging: pagingLink, successMsg:successMsg, noMessage: !successMsg });
+    }, {populate: ['category'], sortBy: {name: -1}});
     // });
+});
+
+
+router.post('/blogs/search', function(req, res, next){
+    var searchTerm = req.body.name;
+    req.checkBody("name", "Please enter a task name.").notEmpty();
+    var errors = req.validationErrors();
+    if(errors){
+        console.log(errors);
+        res.redirect('/blogs/view');
+    }else{
+        var successMsg = req.flash('success')[0];
+        var perPage = 3, page = req.param('page') > 0 ? req.param('page') : 1;
+        Post.paginate({name: searchTerm}, { page: page, limit: perPage }, function(err, results) {
+            if (err) console.log(err);
+
+            pagingLink = pagingFunc(results);
+            res.render('blogs/view', { posts: results.docs, paging: pagingLink, successMsg:successMsg, noMessage: !successMsg });
+        }, {populate: ['category'], sortBy: {name: -1}});
+    }
 });
 
 

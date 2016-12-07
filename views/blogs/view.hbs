@@ -4,6 +4,14 @@
     <div class="pull-left">
         <a href="/blogs/create">Create New Post</a>
     </div>
+    <form method="post" action="/blogs/search" class="form-inline pull-right">
+      <div class="form-group">
+        <div class="input-group">
+          <input type="text" name="name" class="form-control" id="exampleInputAmount" placeholder="Search" required>
+        </div>
+      </div>
+      <button type="submit" class="btn btn-primary">Search</button>
+    </form>
 
     <div class="col-md-4 col-sm-6 col-md-offset-4 col-sm-offset-3">
         <div id="success" class="success alert alert-success" {{#if noMessage}}hidden{{/if}}>
@@ -21,18 +29,32 @@
             </tr>
         </thead>
         <tbody>
-            {{#each posts }}
+            {{#if posts}}
+                {{#each posts }}
+                    <tr>
+                        <td>{{this.name}}</td>
+                        <td>{{this.category.description}}</td>
+                        <td><img src="/files/{{this.image}}" style="max-width:150px"></td>
+                        <td>{{this.content}}</td>
+                        <td>
+                            <span><a href="/blogs/update/{{this._id}}">Edit</a></span> |
+                            <span><a href="/blogs/delete/{{this._id}}">Delete</a></span>
+                        </td>
+                    </tr>
+                {{/each}}
+            {{else}}
                 <tr>
-                    <td>{{this.name}}</td>
-                    <td>{{this.category.description}}</td>
-                    <td><img src="/files/{{this.image}}" style="max-width:150px"></td>
-                    <td>{{this.content}}</td>
-                    <td>
-                        <span><a href="/blogs/update/{{this._id}}">Edit</a></span> |
-                        <span><a href="/blogs/delete/{{this._id}}">Delete</a></span>
-                    </td>
+                    <td colspan="5" style="text-align: center;">No Records Found!</td>
                 </tr>
-            {{/each}}
+            {{/if}}
         </tbody>
     </table>
 </div>
+
+<nav aria-label="Page navigation">
+  <ul class="pagination">
+    {{#each paging }}
+        {{{this}}}
+    {{/each}}
+</ul>
+</nav>

@@ -1,4 +1,6 @@
 var mongoose = require('mongoose');
+var paginate  = require('mongoose-paginate');
+
 var Schema = mongoose.Schema;
 
 
@@ -9,6 +11,6 @@ var postSchema = new Schema({
     image: {type: String, required: true, default: 'default.jpg'}
 });
 
-
+postSchema.plugin(paginate);
 
 module.exports = mongoose.model('Post', postSchema);

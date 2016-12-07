@@ -15,6 +15,7 @@ var MongoStore = require('connect-mongo')(session);
 
 var routes = require('./routes/index');
 var userRoutes = require('./routes/user');
+var adminRoutes = require('./routes/admin');
 
 
 var app = express();
@@ -24,22 +25,6 @@ mongoose.Promise = require('bluebird');
 
 
 
-// app.engine('.hbs', expressHbs( { defaultLayout: 'layout', extname:'.hbs',
-//     helpers : {
-//         if_equal : function(a, b, opts) {
-//                 if (a == b) {
-//                     return opts.fn(this)
-//                 } else {
-//                     return opts.inverse(this)
-//                 }
-//         }
-//     }
-// })
-// );
-
-
-// app.engine('handlebars', hbs.engine);
-// app.set('view engine', 'handlebars');
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -67,9 +52,12 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(function(req, res, next){
     res.locals.login = req.isAuthenticated();
+    res.locals.adminAcess = (req.isAuthenticated() && req.user.role == 'admin')? true: false;
+    console.log(res.locals.adminAcess);
     next();
 });
 
+app.use('/admin', adminRoutes);
 app.use('/user', userRoutes);
 app.use('/', routes);
 
